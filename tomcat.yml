@@ -1,16 +1,12 @@
 ---
 - hosts: all
   connection: ssh
-  variables
-  {
-  abc=httpd
-  
-  }
-  
+  vars:
+   abc: httpd
   tasks:
     - name: install http
-     yum: {{abc}} state=present
-	 notify: start httpd
- handlers:
-    - name: start htttpd
-     service: name={{abc}} state=started
+      yum: "{{abc}}" state=present
+      notify: start httpd
+  handlers:
+    - name: start httpd
+     service: name="{{abc}}" state=started
