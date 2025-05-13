@@ -1,27 +1,18 @@
 ---
-hosts: localhost
-become: yes
-tasks: 
-  - name: Install java dependency
-    yum: 
-     name: java-17-amazon-corretto-devel 
-     state: present
+- hosts: all
+  connection: ssh
+  vars:
+    abc: httpd
 
-  - name: get reposotiory from internet
-    get_url:
-       url: "https://pkg.jenkins.io/redhat/jenkins.repo"
-       dest: "/etc/yum.repos.d/jenkins.repo"
+  tasks:
+    - name: Install httpd
+      yum:
+        name: "{{ abc }}"
+        state: present
+      notify: start httpd
 
-  - name: get from jenkins repo:
-    ansible.builtin.rpm_key:
-      key: "rpm --import https://pkg.jenkins.io/redhat/jenkins.io-2023.key"
-      state: present
-          
-  - name: install jenkins
-    yum: name=jenkins state=present
-
-  - name: start Jenkins
-    service: name=jenkins state=started
-
-
----
+  handlers:
+    - name: start httpd
+      service:
+        name: "{{ abc }}"
+        state: started
